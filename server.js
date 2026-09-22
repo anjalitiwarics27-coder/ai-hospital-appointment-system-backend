@@ -5,9 +5,9 @@
 
 const express = require("express");
 const cors = require("cors");
-const mysql = require("mysql2");
 const http = require("http");
 const socketIo = require("socket.io");
+require("dotenv").config();
 
 const app = express();
 const server = http.createServer(app);
@@ -40,18 +40,9 @@ app.use((req, res, next) => {
 });
 
 /* =========================
-   DATABASE CONNECTION
+   DATABASE CONNECTION (shared pool, supports Railway via MYSQL_URL/DATABASE_URL)
 ========================= */
-const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "Anjali@123",
-  database: "project_db",
-  port: 3306,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+const db = require("./config/db");
 
 db.getConnection((err, connection) => {
   if (err) {
